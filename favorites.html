@@ -8,12 +8,13 @@
       background-color: #f0f4f8;
       color: #333;
       margin: 0;
-      padding: 0;
+      padding: 20px;
     }
     h1 {
       color: #3f51b5;
       text-align: center;
-      margin-top: 20px;
+      margin: 20px 0;
+      font-size: 2em;
     }
     #favorites-list {
       max-width: 800px;
@@ -24,8 +25,8 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .favorite-item {
-      margin-bottom: 15px;
-      padding: 10px;
+      margin-bottom: 20px;
+      padding: 15px;
       border-bottom: 1px solid #ddd;
     }
     .favorite-item:last-child {
@@ -35,26 +36,63 @@
       background-color: #ff5722;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 8px 16px;
       cursor: pointer;
       border-radius: 4px;
-      font-size: 14px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
     }
     .unfavorite-button:hover {
       background-color: #e64a19;
     }
     button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
+      display: block;
+      width: calc(100% - 40px);
+      max-width: 300px;
+      margin: 20px auto;
+      padding: 12px 20px;
+      font-size: 18px;
       background-color: #3f51b5;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
     button:hover {
       background-color: #303f9f;
+    }
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5em;
+      }
+      .favorite-item {
+        padding: 12px;
+      }
+      .unfavorite-button {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+      button {
+        font-size: 16px;
+        padding: 10px 16px;
+      }
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2em;
+      }
+      .favorite-item {
+        padding: 10px;
+      }
+      .unfavorite-button {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+      button {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
     }
   </style>
 </head>
