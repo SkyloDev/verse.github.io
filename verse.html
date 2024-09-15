@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bible Verse</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      text-align: center;
+    }
+
+    h1 {
+      color: #3f51b5;
+    }
+
+    #verse-name {
+      font-size: 24px;
+      margin: 10px 0;
+      color: #ff5722;
+    }
+
+    #verse-text {
+      font-size: 18px;
+      margin: 10px auto;
+      width: 80%;
+      max-width: 800px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      margin: 10px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #favorite-button {
+      background-color: #ffeb3b;
+    }
+
+    #favorite-button.favorited {
+      background-color: #cddc39;
+    }
+
+    #another-verse-button {
+      background-color: #3f51b5;
+    }
+
+    #your-favorites-button {
+      background-color: #4caf50;
+    }
+
+    #another-verse-button:disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
+    }
+
+    #cooldown-message, #all-done-message {
+      font-size: 16px;
+      margin-top: 20px;
+    }
+
+    #all-done-message {
+      color: #ff5722;
+      font-weight: bold;
+    }
+
+    #cooldown-message {
+      color: #ff9800;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .verse-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 800px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #3f51b5;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bible Verse</h1>
+    <div class="verse-card">
+      <h2 id="verse-name"></h2>
+      <p id="verse-text"></p>
+      <button id="favorite-button" class="button">Favorite</button>
+      <button id="another-verse-button" class="button">Another Random Verse</button>
+      <button id="your-favorites-button" class="button">Your Favorites</button>
+      <p id="cooldown-message"></p>
+      <p id="all-done-message"></p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2024 Verse Randomizer</p>
+  </div>
+
+  <script>
+    const verses = [
+      { name: "John 3:16", text: "For God so loved the world that He gave His only Son, that whoever believes in Him should not perish but have eternal life." },
+      { name: "Romans 8:28", text: "And we know that in all things God works for the good of those who love Him, who have been called according to His purpose." },
+      { name: "Philippians 4:13", text: "I can do all things through Christ who strengthens me." },
+      { name: "Jeremiah 29:11", text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future." },
+      { name: "Psalm 46:1", text: "God is our refuge and strength, an ever-present help in trouble." },
+      { name: "Isaiah 40:31", text: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint." },
+      { name: "1 Corinthians 13:4-5", text: "Love is patient, love is kind. It does not envy, it does not boast, it is not proud. It does not dishonor others, it is not self-seeking, it is not easily angered, it keeps no record of wrongs." },
+      { name: "2 Timothy 1:7", text: "For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline." },
+      { name: "Matthew 11:28", text: "Come to me, all you who are weary and burdened, and I will give you rest." },
+      { name: "Psalm 119:105", text: "Your word is a lamp to my feet and a light for my path." },
+      { name: "Proverbs 3:5-6", text: "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to Him, and He will make your paths straight." },
+      { name: "Romans 15:13", text: "May the God of hope fill you with all joy and peace as you trust in Him, so that you may overflow with hope by the power of the Holy Spirit." },
+      { name: "Hebrews 11:1", text: "Now faith is confidence in what we hope for and assurance about what we do not see." },
+      { name: "1 Peter 5:7", text: "Cast all your anxiety on Him because He cares for you." },
+      { name: "Ephesians 2:8-9", text: "For it is by grace you have been saved, through faith—and this is not from yourselves, it is the gift of God—not by works, so that no one can boast." },
+      { name: "James 1:5", text: "If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault, and it will be given to you." },
+      { name: "Matthew 6:33", text: "But seek first His kingdom and His righteousness, and all these things will be given to you as well." },
+      { name: "John 14:6", text: "Jesus answered, 'I am the way and the truth and the life. No one comes to the Father except through me.'" },
+      { name: "Romans 5:8", text: "But God demonstrates His own love for us in this: While we were still sinners, Christ died for us." },
+      { name: "Psalm 34:8", text: "Taste and see that the Lord is good; blessed is the one who takes refuge in Him." },
+      { name: "Colossians 3:2", text: "Set your minds on things that are above, not on things that are on earth." },
+      { name: "1 John 4:7", text: "Dear friends, let us love one another, for love comes from God. Everyone who loves has been born of God and knows God." },
+      { name: "Psalm 55:22", text: "Cast your cares on the Lord and He will sustain you; He will never let the righteous be shaken." },
+      { name: "Isaiah 41:10", text: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand." },
+      { name: "John 15:5", text: "I am the vine; you are the branches. If you remain in me and I in you, you will bear much fruit; apart from me you can do nothing." },
+      { name: "Proverbs 4:23", text: "Above all else, guard your heart, for everything you do flows from it." },
+      { name: "Galatians 5:22-23", text: "But the fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness, gentleness and self-control. Against such things there is no law." },
+      { name: "Psalm 121:1-2", text: "I lift up my eyes to the mountains— where does my help come from? My help comes from the Lord, the Maker of heaven and earth." },
+      { name: "1 Corinthians 10:13", text: "No temptation has overtaken you except what is common to mankind. And God is faithful; He will not let you be tempted beyond what you can bear. But when you are tempted, He will also provide a way out so that you can endure it." },
+      { name: "Matthew 7:7", text: "Ask and it will be given to you; seek and you will find; knock and the door will be opened to you." },
+      { name: "Romans 12:2", text: "Do not conform to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God’s will is—His good, pleasing and perfect will." },
+      { name: "1 John 1:9", text: "If we confess our sins, He is faithful and just and will forgive us our sins and purify us from all unrighteousness." },
+      { name: "Ephesians 6:10", text: "Finally, be strong in the Lord and in His mighty power." },
+      { name: "Psalm 27:1", text: "The Lord is my light and my salvation—whom shall I fear? The Lord is the stronghold of my life—of whom shall I be afraid?" },
+      { name: "Joshua 1:9", text: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go." },
+      { name: "Romans 6:23", text: "For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord." },
+      { name: "Proverbs 16:3", text: "Commit to the Lord whatever you do, and He will establish your plans." },
+      { name: "Psalm 91:4", text: "He will cover you with His feathers, and under His wings you will find refuge; His faithfulness will be your shield and rampart." },
+      { name: "2 Corinthians 5:7", text: "For we live by faith, not by sight." },
+      { name: "Matthew 5:14", text: "You are the light of the world. A town built on a hill cannot be hidden." },
+      { name: "Mark 11:24", text: "Therefore I tell you, whatever you ask for in prayer, believe that you have received it, and it will be yours." },
+      { name: "Psalm 139:14", text: "I praise you because I am fearfully and wonderfully made; your works are wonderful, I know that full well." },
+      { name: "Psalm 30:5", text: "For His anger lasts only a moment, but His favor lasts a lifetime; weeping may stay for the night, but rejoicing comes in the morning." },
+      { name: "Isaiah 43:2", text: "When you pass through the waters, I will be with you; and when you pass through the rivers, they will not sweep over you. When you walk through the fire, you will not be burned; the flames will not set you ablaze." },
+      { name: "Romans 3:23", text: "For all have sinned and fall short of the glory of God." },
+      { name: "Romans 10:9", text: "If you declare with your mouth, 'Jesus is Lord,' and believe in your heart that God raised Him from the dead, you will be saved." },
+      { name: "Hebrews 13:8", text: "Jesus Christ is the same yesterday and today and forever." },
+      { name: "Proverbs 2:6", text: "For the Lord gives wisdom; from His mouth come knowledge and understanding." },
+      { name: "Genesis 1:1", text: "In the beginning God created the heavens and the earth." },
+      { name: "Exodus 14:14", text: "The Lord will fight for you; you need only to be still." },
+      { name: "Deuteronomy 31:6", text: "Be strong and courageous. Do not be afraid or terrified because of them, for the Lord your God goes with you; He will never leave you nor forsake you." },
+      { name: "Joshua 24:15", text: "But if serving the Lord seems undesirable to you, then choose for yourselves this day whom you will serve, whether the gods your ancestors served beyond the Euphrates, or the gods of the Amorites, in whose land you are living. But as for me and my household, we will serve the Lord." },
+      { name: "1 Samuel 16:7", text: "But the Lord said to Samuel, 'Do not consider his appearance or his height, for I have rejected him. The Lord does not look at the things people look at. People look at the outward appearance, but the Lord looks at the heart.'" },
+      { name: "2 Samuel 22:31", text: "As for God, His way is perfect: The Lord’s word is flawless; He shields all who take refuge in Him." },
+      { name: "1 Kings 8:56", text: "Praise be to the Lord, who has given rest to His people Israel, just as He promised. Not one word has failed of all the good promises He gave through His servant Moses." },
+      { name: "Nehemiah 8:10", text: "Nehemiah said, 'Go and enjoy choice food and sweet drinks, and send some to those who have nothing prepared. This day is sacred to our Lord. Do not grieve, for the joy of the Lord is your strength.'" },
+      { name: "Job 19:25", text: "I know that my Redeemer lives, and that in the end He will stand on the earth." },
+      { name: "Psalm 16:8", text: "I keep my eyes always on the Lord. With Him at my right hand, I will not be shaken." },
+      { name: "Psalm 28:7", text: "The Lord is my strength and my shield; my heart trusts in Him, and He helps me. My heart leaps for joy, and with my song I praise Him." },
+      { name: "Psalm 31:24", text: "Be strong and take heart, all you who hope in the Lord." },
+      { name: "Psalm 37:5", text: "Commit your way to the Lord; trust in Him and He will do this:" },
+      { name: "Psalm 55:16", text: "As for me, I call to God, and the Lord saves me." },
+      { name: "Proverbs 1:7", text: "The fear of the Lord is the beginning of knowledge, but fools despise wisdom and instruction." },
+      { name: "Proverbs 18:10", text: "The name of the Lord is a fortified tower; the righteous run to it and are safe." },
+      { name: "Proverbs 27:17", text: "As iron sharpens iron, so one person sharpens another." },
+      { name: "Ecclesiastes 3:1", text: "There is a time for everything, and a season for every activity under the heavens:" },
+      { name: "Isaiah 40:29", text: "He gives strength to the weary and increases the power of the weak." },
+      { name: "Isaiah 53:5", text: "But He was pierced for our transgressions, He was crushed for our iniquities; the punishment that brought us peace was on Him, and by His wounds we are healed." },
+      { name: "Isaiah 55:6", text: "Seek the Lord while He may be found; call on Him while He is near." },
+      { name: "Jeremiah 1:5", text: "Before I formed you in the womb I knew you, before you were born I set you apart; I appointed you as a prophet to the nations." },
+      { name: "Jeremiah 32:17", text: "Ah, Sovereign Lord, You have made the heavens and the earth by Your great power and outstretched arm. Nothing is too hard for You." },
+      { name: "Lamentations 3:22-23", text: "Because of the Lord’s great love we are not consumed, for His compassions never fail. They are new every morning; great is Your faithfulness." },
+      { name: "Ezekiel 36:26", text: "I will give you a new heart and put a new spirit in you; I will remove from you your heart of stone and give you a heart of flesh." },
+      { name: "Daniel 9:9", text: "The Lord our God is merciful and forgiving, even though we have rebelled against Him;" },
+      { name: "Hosea 6:6", text: "For I desire mercy, not sacrifice, and acknowledgment of God rather than burnt offerings." },
+      { name: "Joel 2:13", text: "Rend your heart and not your garments. Return to the Lord your God, for He is gracious and compassionate, slow to anger and abounding in love, and He relents from sending calamity." },
+      { name: "Amos 5:14", text: "Seek good, not evil, that you may live. Then the Lord God Almighty will be with you, just as you say He is." },
+      { name: "Obadiah 1:17", text: "But on Mount Zion will be deliverance; it will be holy, and Jacob will possess his inheritance." },
+      { name: "Micah 6:8", text: "He has shown you, O mortal, what is good. And what does the Lord require of you? To act justly and to love mercy and to walk humbly with your God." },
+      { name: "Nahum 1:7", text: "The Lord is good, a refuge in times of trouble. He cares for those who trust in Him," },
+      { name: "Habakkuk 2:4", text: "See, the enemy is puffed up; his desires are not upright—but the righteous person will live by his faithfulness—" },
+      { name: "Zechariah 4:6", text: "So he said to me, 'This is the word of the Lord to Zerubbabel: ‘Not by might nor by power, but by my Spirit,’ says the Lord Almighty.'" },
+      { name: "Malachi 3:10", text: "Bring the whole tithe into the storehouse, that there may be food in my house. Test me in this,’ says the Lord Almighty, ‘and see if I will not throw open the floodgates of heaven and pour out so much blessing that there will not be room enough to store it." },
+      { name: "Matthew 4:19", text: "'Come, follow me,’ Jesus said, ‘and I will send you out to fish for people.'" },
+      { name: "Matthew 6:34", text: "Therefore do not worry about tomorrow, for tomorrow will worry about itself. Each day has enough trouble of its own." },
+      { name: "Matthew 7:12", text: "So in everything, do to others what you would have them do to you, for this sums up the Law and the Prophets." },
+      { name: "Matthew 9:37", text: "Then He said to His disciples, 'The harvest is plentiful but the workers are few.'" },
+      { name: "Mark 10:27", text: "Jesus looked at them and said, 'With man this is impossible, but not with God; all things are possible with God.'" },
+      { name: "Luke 1:37", text: "For no word from God will ever fail." },
+      { name: "Luke 6:38", text: "Give, and it will be given to you. A good measure, pressed down, shaken together and running over, will be poured into your lap. For with the measure you use, it will be measured to you.'" },
+      { name: "Luke 12:32", text: "Do not be afraid, little flock, for your Father has been pleased to give you the kingdom." },
+      { name: "John 8:12", text: "When Jesus spoke again to the people, He said, 'I am the light of the world. Whoever follows me will never walk in darkness, but will have the light of life.'" },
+      { name: "John 10:10", text: "The thief comes only to steal and kill and destroy; I have come that they may have life, and have it to the full." },
+      { name: "John 14:27", text: "'Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid.'" },
+      // Add more verses here
+    ];
+
+    let favoritedVerses = JSON.parse(localStorage.getItem('favoritedVerses')) || [];
+    let displayedIndices = JSON.parse(sessionStorage.getItem('displayedIndices')) || [];
+    
+    function getRandomIndex() {
+      let remainingIndices = verses.map((_, index) => index).filter(index => !displayedIndices.includes(index));
+      if (remainingIndices.length === 0) {
+        document.getElementById("all-done-message").textContent = "You went through all Bible verses.";
+        displayedIndices = [];
+        sessionStorage.setItem('displayedIndices', JSON.stringify(displayedIndices));
+        remainingIndices = verses.map((_, index) => index);
+      }
+      return remainingIndices[Math.floor(Math.random() * remainingIndices.length)];
+    }
+
+    function displayRandomVerse() {
+      const randomIndex = getRandomIndex();
+      const verse = verses[randomIndex];
+      document.getElementById("verse-name").textContent = verse.name;
+      document.getElementById("verse-text").textContent = verse.text;
+      
+      if (document.getElementById("all-done-message").textContent === "") {
+        displayedIndices.push(randomIndex);
+        sessionStorage.setItem('displayedIndices', JSON.stringify(displayedIndices));
+      }
+    }
+
+    function handleCooldown() {
+      const button = document.getElementById("another-verse-button");
+      const message = document.getElementById("cooldown-message");
+
+      button.disabled = true;
+      message.textContent = "Please wait 5 seconds before clicking again.";
+
+      setTimeout(() => {
+        button.disabled = false;
+        message.textContent = "";
+      }, 5000);
+    }
+
+    function handleFavorite() {
+      const button = document.getElementById("favorite-button");
+      const verseName = document.getElementById("verse-name").textContent;
+      const verseText = document.getElementById("verse-text").textContent;
+
+      const isFavorited = favoritedVerses.some(v => v.name === verseName);
+
+      if (isFavorited) {
+        button.classList.remove('favorited');
+        button.textContent = "Favorite";
+      } else {
+        favoritedVerses.push({ name: verseName, text: verseText });
+        localStorage.setItem('favoritedVerses', JSON.stringify(favoritedVerses));
+        button.classList.add('favorited');
+        button.textContent = "Favorited";
+      }
+    }
+
+    displayRandomVerse();
+
+    document.getElementById("another-verse-button").addEventListener("click", () => {
+      displayRandomVerse();
+      handleCooldown();
+    });
+
+    document.getElementById("favorite-button").addEventListener("click", handleFavorite);
+
+    document.getElementById("your-favorites-button").addEventListener("click", () => {
+      window.location.href = 'favorites.html';
+    });
+  </script>
+</body>
+</html>
