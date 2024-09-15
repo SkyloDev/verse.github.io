@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Favorites</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #3f51b5;
+      text-align: center;
+      margin-top: 20px;
+    }
+    #favorites-list {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .favorite-item {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .favorite-item:last-child {
+      border-bottom: none;
+    }
+    .unfavorite-button {
+      background-color: #ff5722;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .unfavorite-button:hover {
+      background-color: #e64a19;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #3f51b5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #303f9f;
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Favorite Bible Verses</h1>
+  <div id="favorites-list"></div>
+  <button onclick="window.location.href='verse.html'">Back to Random Verse</button>
+
+  <script>
+    function displayFavorites() {
+      const favoritesList = document.getElementById("favorites-list");
+      const favoritedVerses = JSON.parse(localStorage.getItem('favoritedVerses')) || [];
+
+      if (favoritedVerses.length === 0) {
+        favoritesList.innerHTML = "<p>You have no favorite Bible verses yet.</p>";
+        return;
+      }
+
+      favoritesList.innerHTML = "";
+      favoritedVerses.forEach((verse, index) => {
+        const verseElement = document.createElement("div");
+        verseElement.className = "favorite-item";
+        verseElement.innerHTML = `
+          <strong>${verse.name}</strong>: ${verse.text} 
+          <button class="unfavorite-button" data-index="${index}">Unfavorite</button>
+        `;
+        favoritesList.appendChild(verseElement);
+      });
+
+      // Add event listeners to the "Unfavorite" buttons
+      document.querySelectorAll('.unfavorite-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+          const index = event.target.getAttribute('data-index');
+          removeFavorite(parseInt(index));
+        });
+      });
+    }
+
+    function removeFavorite(index) {
+      const favoritedVerses = JSON.parse(localStorage.getItem('favoritedVerses')) || [];
+      favoritedVerses.splice(index, 1); // Remove the verse at the given index
+      localStorage.setItem('favoritedVerses', JSON.stringify(favoritedVerses));
+      displayFavorites(); // Refresh the list
+    }
+
+    // Initial display
+    displayFavorites();
+  </script>
+</body>
+</html>
