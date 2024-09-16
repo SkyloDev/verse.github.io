@@ -14,7 +14,7 @@
       color: #3f51b5;
       text-align: center;
       margin: 20px 0;
-      font-size: 2.5em; /* Increased base font size */
+      font-size: 2.5em;
     }
     #favorites-list {
       max-width: 800px;
@@ -28,7 +28,7 @@
       margin-bottom: 20px;
       padding: 15px;
       border-bottom: 1px solid #ddd;
-      font-size: 18px; /* Increased font size */
+      font-size: 18px;
     }
     .favorite-item:last-child {
       border-bottom: none;
@@ -37,10 +37,10 @@
       background-color: #ff5722;
       color: white;
       border: none;
-      padding: 10px 20px; /* Increased padding */
+      padding: 10px 20px;
       cursor: pointer;
       border-radius: 4px;
-      font-size: 18px; /* Increased font size */
+      font-size: 18px;
       transition: background-color 0.3s ease;
     }
     .unfavorite-button:hover {
@@ -51,8 +51,8 @@
       width: calc(100% - 40px);
       max-width: 300px;
       margin: 20px auto;
-      padding: 15px 25px; /* Increased padding */
-      font-size: 20px; /* Increased font size */
+      padding: 15px 25px;
+      font-size: 20px;
       background-color: #3f51b5;
       color: white;
       border: none;
@@ -65,35 +65,35 @@
     }
     @media (max-width: 768px) {
       h1 {
-        font-size: 2em; /* Adjusted for tablets and smaller screens */
+        font-size: 2.2em;
       }
       .favorite-item {
-        font-size: 16px; /* Adjusted for tablets and smaller screens */
+        font-size: 16px;
         padding: 12px;
       }
       .unfavorite-button {
-        font-size: 16px; /* Adjusted for tablets and smaller screens */
+        font-size: 16px;
         padding: 8px 16px;
       }
       button {
-        font-size: 18px; /* Adjusted for tablets and smaller screens */
+        font-size: 18px;
         padding: 12px 20px;
       }
     }
     @media (max-width: 480px) {
       h1 {
-        font-size: 1.8em; /* Adjusted for mobile devices */
+        font-size: 1.8em;
       }
       .favorite-item {
-        font-size: 14px; /* Adjusted for mobile devices */
+        font-size: 14px;
         padding: 10px;
       }
       .unfavorite-button {
-        font-size: 14px; /* Adjusted for mobile devices */
+        font-size: 14px;
         padding: 6px 12px;
       }
       button {
-        font-size: 16px; /* Adjusted for mobile devices */
+        font-size: 16px;
         padding: 10px 16px;
       }
     }
@@ -103,6 +103,7 @@
   <h1>Your Favorite Bible Verses</h1>
   <div id="favorites-list"></div>
   <button onclick="window.location.href='verse.html'">Back to Random Verse</button>
+  <button onclick="window.location.href='index.html'">Homepage</button>
 
   <script>
     function displayFavorites() {
@@ -125,7 +126,6 @@
         favoritesList.appendChild(verseElement);
       });
 
-      // Add event listeners to the "Unfavorite" buttons
       document.querySelectorAll('.unfavorite-button').forEach(button => {
         button.addEventListener('click', (event) => {
           const index = event.target.getAttribute('data-index');
@@ -136,12 +136,11 @@
 
     function removeFavorite(index) {
       const favoritedVerses = JSON.parse(localStorage.getItem('favoritedVerses')) || [];
-      favoritedVerses.splice(index, 1); // Remove the verse at the given index
+      favoritedVerses.splice(index, 1);
       localStorage.setItem('favoritedVerses', JSON.stringify(favoritedVerses));
-      displayFavorites(); // Refresh the list
+      displayFavorites();
     }
 
-    // Initial display
     displayFavorites();
   </script>
 </body>
