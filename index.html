@@ -14,7 +14,7 @@
       color: #333;
       font-family: 'Georgia', serif;
       margin: 20px 0;
-      font-size: 2.5em; /* Increased size for larger screens */
+      font-size: 2.5em;
     }
     .button-container {
       margin-top: 20px;
@@ -24,7 +24,7 @@
       color: white;
       border: none;
       padding: 15px 30px;
-      font-size: 20px; /* Increased font size */
+      font-size: 20px;
       border-radius: 8px;
       cursor: pointer;
       margin: 10px;
@@ -38,33 +38,101 @@
     .button:active {
       background-color: #004085;
     }
+    .goal-container {
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    .goal-container input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .goal-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: none;
+      background-color: #3f51b5;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+    .goal-container button:hover {
+      background-color: #303f9f;
+    }
+    .goal-status {
+      font-size: 18px;
+      margin-top: 20px;
+    }
     @media (max-width: 768px) {
       h1 {
-        font-size: 2em; /* Adjusted for tablets and smaller screens */
+        font-size: 2.2em;
       }
       .button {
-        font-size: 18px; /* Adjusted for tablets and smaller screens */
-        padding: 14px 28px; /* Adjusted padding */
-        margin: 8px;
+        font-size: 18px;
+        padding: 12px 24px;
+      }
+      .goal-container input,
+      .goal-container button {
+        font-size: 14px;
+        padding: 8px;
+      }
+      .goal-status {
+        font-size: 16px;
       }
     }
     @media (max-width: 480px) {
       h1 {
-        font-size: 1.8em; /* Adjusted for mobile devices */
+        font-size: 1.8em;
       }
       .button {
-        font-size: 16px; /* Adjusted for mobile devices */
-        padding: 12px 24px; /* Adjusted padding */
-        margin: 6px;
+        font-size: 16px;
+        padding: 10px 20px;
+      }
+      .goal-container input,
+      .goal-container button {
+        font-size: 12px;
+        padding: 6px;
+      }
+      .goal-status {
+        font-size: 14px;
       }
     }
   </style>
 </head>
 <body>
   <h1>Bible Verse Generator</h1>
+  <div class="goal-container">
+    <input type="number" id="goal-input" placeholder="Enter your verse goal" min="1">
+    <button id="set-goal-button">Set Goal</button>
+    <p id="goal-status" class="goal-status"></p>
+  </div>
   <div class="button-container"> 
     <a href="verse.html" class="button">Random Verse</a>
     <a href="favorites.html" class="button">Your Favorites</a>
-  </div> 
+  </div>
+
+  <script>
+    function initializeGoal() {
+      const goal = localStorage.getItem('goal') || 0;
+      const progress = localStorage.getItem('progress') || 0;
+      document.getElementById('goal-status').textContent = `Goal: ${goal} verses, Progress: ${progress} verses`;
+
+      document.getElementById('set-goal-button').addEventListener('click', () => {
+        const newGoal = parseInt(document.getElementById('goal-input').value, 10);
+        if (!isNaN(newGoal) && newGoal > 0) {
+          localStorage.setItem('goal', newGoal);
+          localStorage.setItem('progress', 0);
+          initializeGoal(); // Refresh goal status
+        } else {
+          alert('Please enter a valid number.');
+        }
+      });
+    }
+
+    initializeGoal();
+  </script>
 </body>
 </html>
